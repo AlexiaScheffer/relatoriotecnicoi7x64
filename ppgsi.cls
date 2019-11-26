@@ -210,7 +210,8 @@
 		% Número do relatório
 		\ifthenelse{\equal{\@lingua}{brazilian}}%
     	{%
-			{\LARGE Relatório Técnico PPgSI-\@numero \par}%
+			{\LARGE Relatório Técnico Arquitetura de computadores ACH2055}%
+			
 		}%
 		{%
 			{\LARGE Technical Report PPgSI-\@numero \par}%

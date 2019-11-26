@@ -1,7 +1,12 @@
 \documentclass[12pt,a4paper,brazilian,utf8]{ppgsi}
+\usepackage{amsmath}
+\usepackage{graphicx}
 
-\title{Título do Relatório Técnico}
+\graphicspath{ {./images/} }
 
+
+
+\title{Análise da arquitetura Intel Core i7  7700}
 % Autores, como aparecem na capa do RT
 \coverauthor{Aléxia Carolina Scheffer da Silva\\ Giovanni Bergaminni\\ Gustavo Jyun Hayashida\\ Matheus Barbosa\\ Norton Trevisan Roman}
 
@@ -12,95 +17,1279 @@
     São Paulo -- SP, Brasil
     \email{norton@usp.br}
 }
-
-% Número do RT
-\numero{XXX/2019}
-
 % Mês e ano do RT
 \mes{11}
 \ano{2019}
 
 \begin{document}
 
-\maketitle
+ \maketitle
 
 \begin{abstract}
-    Texto  resumo do nosso rt - ???. Última atualização: 17/11/2019.
+    Análise da arquitetura Intel Core i7 64 bits 7ª geração com o processador i7 7700. Além disso, há um comparativo de performance com a arquitetura Zen no processador Ryzen 7 1700. Última atualização: 18/11/2019.
 \end{abstract}
 
-\section{Avaliação do professor}
-    \begin{itemize}
-		\item ilustrações, diagramas, gráficos (comparativos tb)
-        \item leitura clara e didática
-		\item referência em tudo
-        \item fontes confiavéis
-            \begin{itemize}
-        		\item livros didáticos
-                \item livros científicos
-                \item artigos científicos (revistas, congresso)
-                \item relatórios técnicos oficiais
-                \item working papers (relatório técnico de empresas)
-                \item manuais dos fabricantes das arquiteturas (site oficial)
-        	\end{itemize}
-	\end{itemize}
-
 \section{Introdução}
-    (Texto da introdução - ???)
-    \cite{Bourdieu1977}
-
-\section{Histórico}
-    (Texto do histórico - suas origens  e estado atual - Giovanni)
-
-\section{Conceitos Básicos}
-    (Texto sobre Conceitos Básicos - que vamos utilizar na pesquisa - ciclo único, pipeline, superpipeline, superescalar - Jyun e Matheus)
-    
-\section{Detalhes}
-    (detalhes - registradores, frequência de clock, tipo de memória, cache, núcleos, threads, etc - Matheus)
-
-\section{Pretensão}
-    (Texto sobre a pretensão - geral ou específico, pq foi criada? - Alexia)
+    O seguinte relatório tem como finalidade analisar e comparar detalhadamente a arquitetura Intel Core I7 geração Kaby Lake do processador Intel I7 7700. Esta arquitetura foi sucessora da arquitetura SkyLake, desenvolvida pela equipe israelense baseada em Haifa. O arquitetura aplica tecnologias para renderização de gráficos 3D e suporte vídeos em 4K. Uma das maiores funcionalidades da arquitetura é o Hyper-Threading. Analisaremos os registradores bem como o conjunto de instruções da arquitetura em ele é implementada no hardware. O relatório tem como foco a descrição de uma maneira geral do funcionamento da arquitetura.
+ 
+\section{História e objetivos da arquitetura}
+    Em meados da década de 1960, o cofundador e presidente da Intel, Emérito Gordon Moore, fez essa observação: "... o número de transistores que seriam incorporados em uma matriz de silício dobraria a cada 18 meses nos próximos anos". Nas últimas três décadas e meia, essa previsão conhecida como "Lei de Moore" continuou sendo válida. O poder da computação e a complexidade (ou aproximadamente, o número de transistores por processador) dos processadores de arquitetura Intel cresceram em estreita relação com a lei de Moore. Aproveitando a nova tecnologia de processo e os novos projetos de microarquitetura, cada nova geração de processadores IA-32 demonstrou margem de escala de frequência e novos níveis de desempenho em relação aos processadores da geração anterior. A Intel lançou seu primeiro microprocessador em 1971 o Intel 4004, no qual foi o primeiro microprocessador de chip único a ser comercializado. Em 1 abril de 1972 foi lançado uma versão melhorada do microprocessador o Intel 8008 contendo mais memória e podendo processar 8 bits. Em abril de 1974 lançou-se o Intel 8080 que ultrapassava 2MHz de velocidade de clock e então seu primeiro computador chamado Altair foi anunciado Em 1977 foi inaugurado o Intel 8085 que exigia menos suporte de hardware e era compatível com o microprocessador anteriormente lançado. No mês de junho de 1978 e 1979 os microprocessadores 8086 e 8088 foram lançados, formando o IBM PC. No dia 1 de Fevereiro de 1982, um dos mais famosos produtos da Intel foi anunciado, o 80286, com uma velocidade entre 6 e 25 MHz e um design muito mais próximo ao dos atuais microprocessadores. 16 de outubro de 1985 foi o dia em que foi lançado o Intel i80386, com uma arquitetura de x86. No ano de 1988 com a aparição do 80386SX de 16 bits com menor custo, esses processadores chegaram ao topo com o ambiente gráfico do Windows que foi desenvolvido anos antes, porém com pouca aceitação do público. Em 10 de abril de 1989 surgia o Intel 80486DX, com uma tecnologia de 32 bits e uma incorporação de cache de nível 1 (L1) no próprio chip. O lançamento do i486 no ano de 1989, com velocidade de 16 á 100 MHz, possuia um conjunto de instruções otimizado, uma unidade de ponto flutuante e um cache unificado integrados no próprio circuito integrado do microprocessador. É apresentado o Pentium em 22 de março de 1992, com uma velocidade inicial de 60 MHz, podendo chegar até 200 MHz e possuindo uma arquitetura de 32 bits. Depois de 3 anos, em 1995 o processador Pentium Pro foi inaugurado com uma nova cara para os servidores de rede  e estações de trabalho. No mês de março de 1997 foi lançado o Intel Pentium 2, com arquitetura x86, baseado em uma versão modificada do núcelo P6. O primeiro processador Xeon é apresentado com o nome Pentium II Xeon é apresentado em 1998, que utilizava tanto o chipset 440GX como o 450NX. Chega o Pentium III em 1999, microprocessador de arquitetura i686. Em 20 de novembro de 2000 o Pentium 4 chega ao mundo, baseado na arquitetura x86 com um design totalmente novo. No ano de 2002 é lançado o Pentium M, com arquitetura x86, com um design modificado do Pentium III. É lançado a nova geração da Intel em 2006, o processador Dual-Core Intel Itanium 2, com núcleo duplo. Oferecia uma melhoria de 80\% no desempenho por watt. Capaz de executar aplicativos de 32 e 64 bits. Em 2008 é anunciado o Intel Atom, voltados para dispositivos móveis para a Internet, smartphones, e dispositivos de baixo consumo. A Intel lança a linha de modelos Core i3, i5 e i7 em 2010, família de processadores que atendem os requisitos de processamento de todos os níveis de usuários. No mês de janeiro de 2011 a Intel lança a segunda geração da família Core. No ano de 2019, os modelos i3, i5 e i7 estão na 10º geração, com a inauguração do modelo i9 em 2017, estando atualmente na 9º geração.
 
 \section{Uso atual}
-    (Texto sobre o uso atual - onde é usada, onde se encontra - Matheus)
+    A arquitetura do processador i7x86 é usada atualmente para as mais variada aplicações sendo ela em laptops, desktops e devices portateis como tablets e smartphones. Desde produtores de filmes, Gamers até Simulações dos mais variados cenarios tal arquitetura é utilizada, Devidos a sua velocidade de processamento. Das tarefas as quais esta arquiterura e mais recomendada e usada de fato temos:
+     \begin{itemize}
+         \item Multitasking.
+         \item Edição e renderizaçao de video.
+         \item Processamento de jogos.
+         \item Calculos matematicos em grandes conjuntos de dados.
+         \item Desenvolvimento. 
+     \end{itemize}
+
+\section{Tipo de arquitetura}
+    A execução no núcleo da arquitetura é superscalar e tem a possibilidade de processar instruções fora de ordem aumentando a capacidade ou índice de instrução executadas por ciclo. As arquiteturas superescalares exploram o paralelismo de instrução, em inglês Instrucion Level Parallelism (ILP). São organizadas internamente como múltiplos pipelines e  o escalonamento de suas instruções podem ser feitas por "hardware" e/ou "software". Possuem múltiplos barramentos para comunicação de operandos e múltiplas unidades funcionais como a ULA (Unidade lógica aritimética), ponto flutuante e unidades de load/store. Sendo que possuem também suporte para tratamento de depêndencia de dados entre instruções de load/store. Apresentam uma Janela de Instruções que isola os estágios de busca e decodificação dos estágios de execução. Contam também com uma recuperação do estado da máquina em caso de exceções ou de previsões erradas de desvios chamada de "Recorder Buffer".
 
 \section{Conjunto de instruções (ISA)}
-    (Texto sobre conjunto de instruções - instruções que fornece ao programador - detalhe das instruções, codificação dentro do datapath - ???)
+    
+    \textbf{ENQCMD: Comando de enfileiramento}
+    O comando automaticamente enfileira outro comando de 64 bytes com o PASID da memória fonte do operando para ao destino no segmento E/S especificado no registrador do operando. A instrução ENQCMD deixa os programas escreverem o comando de empilhar os registradores que são especiais, mapeando a memória I/O (MMIO). A instrução ENQCMD começa lendo os 64 bytes dos dados do comando da fonte de memória do processador. Em seguida a instrução guarda em fila para escrever os comandos. O endereço do operando de destino fica armazenado em um registrador de uso geral.
+    
+    \begin{table}[H]
+        \centering
+            \caption{Instruções de Codificação de operando}
+            \begin{tabular}{|c|c|c|c|c|c|}
+            \hline
+                \emph{Op/En} & Tupla & Operando 1 & Operando 2 & Operando 3 & Operando 4\\
+            \hline
+    	        A
+    	        & NA
+    	        & ModRM:reg (w)
+    	        & ModRM:r/m (r) 
+    	        & NA
+    	        & NA\\
+            \hline		    
+            \end{tabular}
+            \label{tab:dimensoes}
+     \end{table}
+
+    \textbf {ENQCMDS - Supervisor de comando de enfileiramento}
+    A instrução ENQCMDS permite que o software do sistema escreva comandos para enfileirar registros, que são dispositivos especiais de resgistradores acessados usando E/S mapeada na memória (MMIO).
+    A instrução ENQCMDS começa lendo 64 bytes de dados de comando do seu operando de memória de origem. (Operando de origem é um operando de memória normal). Essa é uma carga comum com armazenamento em cache e a encomenda de memória normalmente implica  pelo tipo da mesma. O operando de origem não precisa estar alinhado e não há garantia de que todos os 64 bytes sejam carregados atomicamente.
+    O ENQCMDS formata seus dados de origem de maneira diferente do ENQCMD. Especificamente, ele os formata em dados de comando como segue:
+    \begin{itemize}
+        \item O comando [19: 0] obtém os bits 19:0 do operando de origem que lido da memória. Esses 20 bits se comunicam por um identificador de espaço de endereço de processo (PASID).
+        \item O comando [30:20] é zero.
+        \item O comando [511: 31] obtém os bits 511: 31 do operando de origem lido da memória. O bit 31 comunica um identificador de privilégio (0 = usuário; 1 = supervisor)
+    \end{itemize}
+    (A instrução ignora os bits 30:20 do operando de origem.)
+    \\A instrução ENQCMDS usa um armazenamento de enfileiramento (definido abaixo) para gravar esses dados de comando no operando de destino. O endereço do operando de destino é especificado em um registro de uso geral como um deslocamento para o segmento ES (o segmento não pode ser substituído). O endereço linear de destino deve estar alinhado por 64 bytes. A operação de um armazenamento de enfileiramento desconsidera o tipo de memória do endereço de memória de destino. Um armazenamento de enfileiramento não é solicitado em relação aos armazenamentos mais antigos para a memória WB ou WC (incluindo armazenamentos não temporais) ou às execuções do CLFLUSHOPT ou CLWB (quando aplicado a endereços diferentes do armazenamento de enfileiramento). O software pode impor essa ordem executando uma instrução de esgrima como SFENCE ou MFENCE antes do enfileiramento loja. Um armazenamento de enfileiramento não grava os dados na hierarquia de cache, nem busca nenhum dado na hierarquia de cache. Os dados de comando de uma loja de enfileiramento nunca são combinados com os de qualquer outra loja no mesmo endereço. Diferente de outras lojas, uma loja de enfileiramento retorna um status que a instrução ENQCMDS carrega no sinalizador ZF no Registro RFLAGS:
+    \begin{itemize}
+        \item ZF = 0 (êxito) relata que os dados do comando de 64 bytes foram gravados atomicamente no registro de enfileiramento de um dispositivo e foi aceito pelo dispositivo. (Não garante que o dispositivo tenha agido sob o comando; pode na fila para execução posterior.)
+        \item ZF = 1 (nova tentativa) relata que os dados do comando não foram aceitos. Este status será retornado se o destino address é um registro de enfileiramento, mas o comando não foi aceito devido à capacidade ou a outros motivos temporais.   Esse status também será retornado se o endereço de destino não for um registro de enfileiramento (incluindo o caso de um endereço de memória); nesses casos, o armazenamento é descartado e não é gravado no MMIO nem na memória.
+    \end{itemize}
+    A instrução ENQCMDS pode ser executada apenas se CPL = 0. A disponibilidade da instrução ENQCMDS é indicada por a presença do sinalizador do recurso CPUID ENQCMD (bit 29 do registro ECX, consulte “Instrução CPUID” no capítulo 1).
+    
+    \textbf {GF2P8AFFINEINVQB: Transformação afim de Galois Field inversa}
+    A instrução AFFINEINVB computa as transformações afins no campo de galois $2^8$. Para uma instrução uma transformação finita e definida por A * inv(x) + b onde “A” e uma matriz 8 por 8 e o x e b são vetores de 8 bits.
+    
+    Um registrado (operando 1) SIMD guarda o “x” de 16,32 ou 64 bits, Um segundo SIMD ou um operando na memória contendo valores 2, 4, 8, que são operados pelo correspondente alinhado 8 “x” para valores do primeiro registrador. O vetor “b” e constante para todos os cálculos e conteúdos no mesmo byte.
+    
+    \textbf {ENQCMD: comando de infileiramento}
+    Este comando automaticamente enfileira o comando de 64 bytes com o PASID da memória fonte do operando para ao destino no seguimento ES especificado no registrador do operando 
+    
+    Instruções de Codificação de operando: 
+    
+   \begin{table}[H]
+        \centering
+        \caption{Instruções de Codificação de operando}
+        \begin{tabular}{|l|l|c|c|r|r|}
+            \hline
+            \emph{Op/En} & Tupla & Operando 1 & Operando 2 & Operando 3 & Operando 4\\
+            \hline
+            A
+            & NA
+            & ModRM:reg(r,w)
+            & ModRM:r/m (r)
+            & mm8
+            & NA\\
+            \hline
+            B
+            & NA
+            & ModRM:reg(w)
+            & EVEX.vvvv (r)
+            & ModRM:r/m (r)
+            & imm8 (r)\\
+            \hline	
+            C
+            & full
+            & ModRM:reg (w)
+            & EVEX.vvvv (r) 
+            & ModRM:r/m (r) 
+            & imm8 (r)\\
+            \hline	
+        \end{tabular}
+        \label{tab:dimensoes}
+    \end{table}
+
+    \textbf {GF2P8AFFINEQB: Transformação Afim de Campo de Galois}
+    \\Seguindo a mesma instrução para os campos de Galois invertidos o que esta instrução faz é calcular a mesma matriz de forma normal mantendo a mesma tabela de operandos com operações diferentes
+
+    \textbf {GF2P8MULB: Campo multiplicador de bytes de Galois}
+    \\Esta instrução multiplica os elementos em um campo finito GF($2^8$), operando em um byte no primeiro código do operando e correspondendo no byte do segundo operando
+
+    \textbf {PCONFIG: Plataforma de configuração}
+    \\As instruções PCONFIG deixa o software configurar certas funcionalidades folhas de plataforma. Ela suporta diversas funções identificadas pelo valor EAX. Os registradores RBX, RCX e RDX para propostas específicas de folha.Cada função PCONFIG aplica uma trava ao hardware associada ao identificador numérico.
+    
+    Os PCONFIG codificadores de folha
+    
+    MKTME\_KEY\_PROGRAM - Usado como chave do programa folha encriptado e também conta com um endereço reservado. 
+    
+    MKTME\_KEY\_PROGRAM\_STRUCT que junto a outros campos é usado para gerar e emcriptar a chave com os campos KEYID e KEYID\_CTRL além dos campos para guardar os operadores há também flags para indicar o status da chave. 
+
+    \textbf {VAESDEC: execução uma rodada de um fluxo de descriptografia AES}
+    Esta instrução performa uma rodada do fluxo da desencriptação AES usado uma cifra equivalente e inversa, ela performa de um operando de 128-bit desde o primeiro operando e guarda o resultado no operando de destino.
+    \begin{table}[H]
+        \centering
+        \caption{Instruções de Codificação de operando}
+        \begin{tabular}{|l|l|c|c|r|r|}
+            \hline
+                \emph{Op/En} & Tupla & Operando 1 & Operando 2 & Operando 3 & Operando 4\\
+            \hline
+                A
+                & NA
+                & ModRM:reg(w)
+                & EVEX.vvvv (r)
+                & ModRM:r/m (r)
+                & NA\\
+            \hline
+                B
+                & Full
+                & ModRM:reg(w)
+                & EVEX.vvvv (r)
+                & ModRM:r/m (r)
+                & NA \\
+            \hline	
+        \end{tabular}
+        \label{tab:dimensoes}
+    \end{table}
+    Operação :
+    
+    AESDEC 
+    
+    STATE \textless- SRC1 
+    
+    RoundKey \textless- SRC2
+    
+    STATE \textless- InvShiftRows( STATE )
+    
+    STATE \textless- InvSubBytes( STATE ) 
+    
+    STATE \textless- InvMixColumns( STATE ) 
+    
+    DEST[127:0] \textless- STATE XOR RoundKey
+    
+    DEST[MAXVL-1:128] (Unmodified)
+           
+           
+           
+    \textbf{VAESDECLAST: Executar a última rodada de um fluxo de descriptografia AES}
+    Esta instrução segue a mesma ideia da comando de um único round entretanto com a operação mais simplificada. E além do fato de considerar o última rodada.
+                
+    Operação:
+
+    AESDECLAST 
+    
+    STATE \textless- SRC1
+    
+    RoundKey \textless- SRC2 
+    
+    STATE \textless- InvShiftRows( STATE )
+    
+    STATE \textless- InvSubBytes( STATE ) 
+    
+    DEST[127:0] \textless- STATE XOR RoundKey 
+    
+    DEST[MAXVL-1:128] (U    nmodified)
+
+           
+    \textbf{VAESENC: Executar uma rodada de um fluxo de criptografia AES}
+    Esta instrução performa uma rodada do fluxo encriptação usando uma rodada do segundo operador.
+    
+    Use a instrução AESENC-CLAST
+    
+    \begin{table}[H]
+        \centering
+        \caption{Instruções de Codificação de operando}
+            \begin{tabular}{|l|l|c|c|r|r|}
+                \hline
+                \emph{Op/En} & Tupla & Operando 1 & Operando 2 & Operando 3 & Operando 4\\
+                \hline
+                    A
+                    & NA
+                    & ModRM:reg (w)
+                    & EVEX.vvvv (r)
+                    & ModRM:r/m (r)
+                    & NA\\
+                \hline
+                    B
+                    & FULL Mem
+                    & ModRM:reg (w)
+                    & EVEX.vvvv (r)
+                    & ModRM:r/m (r)
+                    & NA\\
+                \hline
+            \end{tabular}
+        \label{tab:dimensoes}
+    \end{table}
+
+   \textbf{VAESENCLAST: Executa a última rodada de um fluxo de criptografia AES}
+    Executa a última rodada de um fluxo de criptografia AES usando um chave redonda da segunda origem do operando, operando em dados de 128 bits (estado) desde o operando da primeira origem, e guardando o resultado de destino do operando. Versões codificadas de VEX e EVEX das instruções permitem operações (não destrutivas) de 3 operandos. O legado das versões codificadas das intruções exigem que a origem do primeiro operando e seu destino sejam iguais e precisam estar em um registrador XMM.
+    A forma da versão codificada dessa instrução do EVEX não suporta uma supressão de falha de memória.
+    \begin{table}[H]
+        \centering
+        \caption{VAESENCLAST: Opcodes,Intrucões e descrição das instruções}
+            \begin{tabular}{|l|c|}
+                \hline
+                \emph{Opcode/Instrução} & Descrição\\
+                \hline
+                VEX.256.66.0F38.WIG DD /r & Executa a última rodada de um fluxo de criptografia AES\\
+                VAESENCLAST ymm1, ymm2, & operando com dados de 128 bits(estado) de \\
+                ymm3/m256 & ymm2 com a chave redonda de 128 bits de\\
+                & ymm3/m256; guarda o resultado em ymm1\\ 
+                \hline
+                VEX.128.66.0F38.WIG DD /r & Executa a última rodada de um fluxo de criptografia AES \\
+                VAESENCLAST xmm1, xmm2, & operando com dados de 128 bits(estado) de \\
+                xmm3/m128 & xmm2 com a chave redonda de 128 bits de \\
+                & xmm3/m128; guarda o resultado em xmm1 \\
+                \hline
+                EVEX.256.66.0F38.WIG DD /r & Executa a última rodada de um fluxo de criptografia AES \\
+                VAESENCLAST ymm1, ymm2, & operando com dados de 128 bits(estado) de \\
+                ymm3/m256 &  ymm2 com a chave redonda de 128 bits de \\
+                 & ymm3/m256; guarda o resultado em ymm1 \\ 
+                \hline
+                EVEX.512.66.0F38.WIG DD /r & Executa a última rodada de um fluxo de criptografia AES \\
+                VAESENCLAST zmm1, zmm2, & operando com dados de 128 bits(estado) de \\
+                zmm3/m512 &  zmm2 com a chave redonda de 128 bits de \\
+                & zmm3/m512; guarda o resultado em zmm1 \\
+                \hline
+            \end{tabular}
+        \label{tab:dimensoes}
+    \end{table}
+		
+    \begin{table}[H]
+        \centering
+        \caption{Instruções de Codificação de operando}
+            \begin{tabular}{|l|l|c|c|r|r|}
+                \hline
+                \emph{Op/En} & Tupla & Operando 1 & Operando 2 & Operando 3 & Operando 4\\
+                \hline
+                    A
+                    & NA
+                    & ModRM:reg (w)
+                    & EVEX.vvvv (r)
+                    & ModRM:r/m (r)
+                    & NA\\
+                \hline
+                    B
+                    & FULL Mem
+                    & ModRM:reg (w)
+                    & EVEX.vvvv (r)
+                    & ModRM:r/m (r)
+                    & NA\\
+                \hline
+            \end{tabular}
+        \label{tab:dimensoes}
+    \end{table}
+		
+    \textbf{VCVTNE2PS2BF16: Converte dois dados únicos compactados em um único dado BF16 compactado}
+        Esta instrução converte 2 registradores SIMD de dados únicos compactados em um único registro de dado BF16
+        compactado. Esta instrução não suporta falha na supressão de memória.
+        O modo de arrendodamento 'Arredondar para o par mais próximo" é usado'. "Denormals" de saída são sempre nivelados a zero e entradas de "denormals" são sempre tratados como zero. MXCSR não é consultado nem atualizado.
+        \begin{table}[H]
+		    \centering
+		    \caption{VCVTNE2PS2BF16: Opcodes,Intrucões e descrição das instruções}
+	    	\begin{tabular}{|l|c|}
+			    \hline
+			    \emph{Opcode/Instrução} & Descrição\\
+		    	\hline
+		    	EVEX.128.F2.0F38.W0 72 /r 
+		    	& Converte dados únicos compactados de xmm2 e \\
+                VCVTNE2PS2BF16 xmm1\{k1\}\{z\}, 
+                & xmm3/m128/m32bcst para o dado BF16 compactado em \\
+                xmm2, xmm3/m128/m32bcst 
+                & xmm1 com a writemask k1 \\
+		    	\hline
+		    	EVEX.256.F2.0F38.W0 72 /r 
+		    	& Converte dados únicos compactados de ymm2 e \\
+                VCVTNE2PS2BF16 ymm1\{k1\}\{z\}, 
+                & ymm3/m256/m32bcst para o dado BF16 compactado em \\
+                ymm2, ymm3/m256/m32bcst 
+                & ymm1 com a writemask k1 \\
+		    	\hline
+		    	EVEX.512.F2.0F38.W0 72 /r
+		    	& Converte dados únicos compactados de zmm2 e \\
+                VCVTNE2PS2BF16 zmm1\{k1\}\{z\}, 
+                & zmm3/m512/m32bcst para o dado BF16 compactado em \\
+                zmm2, zmm3/m512/m32bcst 
+                & zmm1 com a writemask k1 \\
+		    	\hline
+	     	\end{tabular}
+		    \label{tab:dimensoes}
+    	\end{table}
+    	 \begin{table}[H]
+	         \centering
+	        \caption{Instruções de Codificação de operando}
+	        \begin{tabular}{|l|l|c|c|r|r|}
+	        \hline
+	            \emph{Op/En} & Tupla & Operando 1 & Operando 2 & Operando 3 & Operando 4\\
+	        \hline
+		        A
+		        & Full
+		        & ModRM:reg (w)
+		        & EVEX.vvvv (r)
+		        & ModRM:r/m (r)
+		        & NA\\
+            \hline
+            \end{tabular}
+            \label{tab:dimensoes}
+        \end{table}
+                      
+    \textbf{VCVTNEPS2BF16: Converte um único dato compactado em um dado BF16 compactado}
+    Esta instrução converte 2 registradores SIMD de dados únicos compactados em um único registro de dado BF16 compactado.O modo de arrendodamento 'Arredondar para o par mais próximo' é usado. Denormals de saída são sempre nivelados a zero e entradas de denormals são sempre tratados como zero. MXCSR não é consultado nem atualizado.
+       \begin{table}[H]
+           \centering
+              \caption{VCVTNE2PS2BF16: Opcodes,Intrucões e descrição das instruções}
+    	        \begin{tabular}{|l|c|}
+    	      \hline
+    	     \emph{Opcode/Instrução} & Descrição\\
+        	\hline
+        	EVEX.128.F3.0F38.W0 72 /r 
+        	& Converte dados únicos compactados de xmm2 e \\
+            VCVTNEPS2BF16 xmm1\{k1\}\{z\}, 
+            & xmm3/m128/m32bcst para o dado BF16 compactado em \\
+            xmm2, xmm3/m128/m32bcst 
+            & xmm1 com a writemask k1 \\
+        	\hline
+        	EVEX.256.F3.0F38.W0 72 /r 
+        	& Converte dados únicos compactados de ymm2 e \\
+            VCVTNEPS2BF16 ymm1\{k1\}\{z\}, 
+            & ymm3/m256/m32bcst para o dado BF16 compactado em \\
+            ymm2, ymm3/m256/m32bcst 
+            & ymm1 com a writemask k1 \\
+        	\hline
+        	EVEX.512.F3.0F38.W0 72 /r
+        	& Converte dados únicos compactados de zmm2 e \\
+            VCVTNEPS2BF16 zmm1\{k1\}\{z\}, 
+            & zmm3/m512/m32bcst para o dado BF16 compactado em \\
+            zmm2, zmm3/m512/m32bcst 
+            & zmm1 com a writemask k1 \\
+        	\hline
+     	\end{tabular}
+        \label{tab:dimensoes}
+    \end{table}
+    	
+
+	\begin{table}[H]
+         \centering
+        \caption{Instruções de Codificação do operando}
+        \begin{tabular}{|l|l|c|c|r|r|}
+        \hline
+            \emph{Op/En} & Tupla & Operando 1 & Operando 2 & Operando 3 & Operando 4\\
+        \hline
+	        A
+	        & Full
+	        & ModRM:reg (w)
+	        & ModRM:r/m (r)
+	        & NA
+	        & NA\\
+        \hline
+        \end{tabular}
+        \label{tab:dimensoes}
+     \end{table}
+
+    \textbf{VDPBF16PS: Produto escalar dos pares de BF16 acumulados em um pacote único preciso}
+    Essa instrução executa o produto escalar SIMD de dois pares BF16 que se acumulam em um único registrador preciso compactado.O modo de arrendodamento 'Arredondar para o par mais próximo' é usado. Denormals de saída são sempre nivelados a zero e entradas de denormals são sempre tratados como zero. MXCSR não é consultado nem atualizado.
+    \begin{table}[H]
+        \centering
+        \caption{VCVTNE2PS2BF16: Opcodes,Intrucões e descrição das instruções}
+        	\begin{tabular}{|l|c|}
+        	    \hline
+        	    \emph{Opcode/Instrução} & Descrição\\
+            	\hline
+            	EVEX.128.F3.0F38.W0 52 /r 
+            	& Multiplica os pares BF16 de xmm2 e\\
+                VDPBF16PS xmm1\{k1\}\{z\}, 
+                & xmm3/m128, e acumula os resultados \\
+                xmm2, xmm3/m128/m32bcst 
+                & únicos, compactados e precisos em xmm1 com\\
+                & o writemask k1 \\
+            	\hline
+            	EVEX.256.F3.0F38.W0 52 /r 
+            	& Multiplica os pares BF16 de ymm2 e \\
+                VDPBF16PS ymm1\{k1\}\{z\}, 
+                & ymm3/m256, e acumula os resultados \\
+                ymm2, ymm3/m256/m32bcst 
+                & únicos, compactados e precisos em ymm1 com \\
+                & o writemask k1 \\
+            	\hline
+            	EVEX.512.F3.0F38.W0 52 /r
+            	&  Multiplica os pares BF16 de zmm2 e \\
+                VDPBF16PS zmm1\{k1\}\{z\}, 
+                & zmm3/m512, e acumula os resultados \\
+                zmm2, zmm3/m512/m32bcst 
+                & únicos, compactados e precisos em zmm1 com \\
+                & o writemask k1 \\
+            	\hline
+         	\end{tabular}
+    \label{tab:dimensoes}
+    \end{table}
+    \begin{table}[H]
+         \centering
+        \caption{Instruções de Codificação de operando}
+        \begin{tabular}{|c|c|c|c|c|c|}
+        \hline
+            \emph{Op/En} & Tupla & Operando 1 & Operando 2 & Operando 3 & Operando 4\\
+        \hline
+            A
+            & Full
+            & ModRM:reg (w)
+            & EVEX.vvvv (r)
+            & ModRM:r/m (r)
+            & NA\\
+        \hline
+        \end{tabular}
+        \label{tab:dimensoes}
+    \end{table}
+    	
+    \textbf{VP2INTERSECTD/VP2INTERSECTQ:}
+    
+    
+    Computa a instersecção entre DWORDS/QUADWORDS em um par de registradores de máscara. Esta instrução grava um par par/ímpar de registradores de máscara. O destino do registro da máscara indicado no campo MODRM.REG, é usado para formar a base do par de registradores. O bit baixo desse campo está mascarado (definido como zero) para criar o primeiro registro do par.EVEX.aaa e EVEX.z devem ser zero.
+
+	\begin{table}[H]
+         \centering
+        \caption{Instruções de Codificação de operando}
+        \begin{tabular}{|c|c|c|c|c|c|}
+        \hline
+            \emph{Op/En} & Tupla & Operando 1 & Operando 2 & Operando 3 & Operando 4\\
+        \hline
+            A
+            & Full
+            & ModRM:reg (w)
+            & EVEX.vvvv (r)
+            & ModRM:r/m (r)
+            & NA\\
+        \hline
+        \end{tabular}
+        \label{tab:dimensoes}
+    \end{table}
+
+    \textbf{VPCLMULQDQ: Multiplicação sem carga de Qwardword}
+    
+    
+    \\ Executa uma multiplicação sem carga de duas quadwords, selecionadas no primeiro e no segundo operando de origem de acordo com o valor do byte imediato.A forma codificada em EVEX desta instrução não suporta a supressão de falhas na memória.
+    \begin{table}[H]
+        \centering
+        \caption{Instruções de Codificação de operando}
+            \begin{tabular}{|l|l|c|c|r|r|}
+                \hline
+                    \emph{Op/En} & Tupla & Operando 1 & Operando 2 & Operando 3 & Operando 4\\
+                \hline
+                    A
+                    & NA
+                    & ModRM:reg (w)
+                    & EVEX.vvvv (r)
+                    & ModRM:r/m (r)
+                    & imm8 (r)\\
+                    \hline
+                    B
+                    & Full Mem
+                    & ModRM:reg (w)
+                    & EVEX.vvvv (r)
+                    & ModRM:r/m (r)
+                    & imm8 (r)\\
+                    
+                \hline
+            \end{tabular}
+        \label{tab:dimensoes}
+    \end{table}
+           
+    \textbf{VPCOMPRESS: Armazena pacotes dispersos de bytes/palavras de valores inteiros em memória/registradores densos}
+    \\ Compacta (armazena) valores de até 64 bytes ou 32 palavras do operando de origem (segundo operando) para o operando de destino (primeiro operando), com base nos elementos ativos determinados pelo operando de máscara de gravação. Nota: O EVEX.vvvv é reservado e deve ser 1111b, caso contrário, as instruções serão #UD.
+    Move até 512 bits de valores de bytes compactados do operando de origem (segundo operando) para o operando de destino (primeiro operando). Esta instrução é usada para armazenar conteúdos parciais de um registro vetorial em um vetor byte ou em um único local da memória usando os elementos ativos no operando writemask.
+    Versão de destino da memória: somente o vetor contíguo é gravado no local da memória de destino. EVEX.z
+    deve ser zero.Registrar a versão de destino: se o comprimento do vetor contíguo for menor que o do vetor de entrada no operando de origem, os bits superiores do registrador de destino não serão modificados se o EVEX.z não estiver definido; caso contrário, o bit superior os bits são zerados.
+    Esta instrução suporta supressão de falha de memória.
+    Observe que o deslocamento compactado assume uma pré-escala (N) correspondente ao tamanho de um único elemento em vez do tamanho do vetor completo.
+    \begin{table}[H]
+        \centering
+        \caption{Instruções de Codificação de operando}
+            \begin{tabular}{|l|l|c|c|r|r|}
+                \hline
+                    \emph{Op/En} & Tupla & Operando 1 & Operando 2 & Operando 3 & Operando 4\\
+                \hline
+                    A
+                    & Tuple1 Scalar
+                    & ModRM:r/m (w)
+                    & ModRM:reg (r)
+                    & NA
+                    & NA\\
+                    \hline
+                    B
+                    & NA
+                    & ModRM:r/m (w)
+                    & ModRM:reg (r)
+                    & NA
+                    & NA\\
+                    
+                \hline
+            \end{tabular}
+        \label{tab:dimensoes}
+    \end{table}
+                            
+    \textbf{VPDPBUSD: Multiplica e Soma bytes não sinalizados e sinalizados}
+    \\Multiplica os bytes individuais não sinalizados do primeiro operando de origem pelos bytes sinalizados correspondentes do segundo operando de origem, produzindo resultados intermediários de palavras sinalizadas. Os resultados da palavra são somados e acumulados no operando de tamanho do elemento dword de destino.Esta instrução suporta supressão de falha de memória.
+    \begin{table}[H]
+        \centering
+        \caption{Instruções de Codificação de operando}
+            \begin{tabular}{|c|c|c|c|c|c|}
+                \hline
+                \emph{Op/En} & Tupla & Operando 1 & Operando 2 & Operando 3 & Operando 4\\
+                \hline
+                    A
+                    & Full
+                    & ModRM:reg (r,w)
+                    & EVEX.vvvv (r)
+                    & ModRM:r/m (r)
+                    & NA\\
+                \hline
+            \end{tabular}
+        \label{tab:dimensoes}
+    \end{table}
+           
+    \textbf{VPDPBUSDS: Multiplica e Soma bytes não sinalizados e sinalizados com saturação}
+        \\
+        Multiplica os bytes individuais não sinalizados do primeiro operando de origem pelos bytes sinalizados correspondentes do segundo operando de origem, produzindo resultados intermediários de palavras sinalizadas. Os resultados da palavra são somados e acumulados no operando de tamanho do elemento dword de destino. Se a soma intermediária exceder um número assinado de 32b, o resultado está saturado para 0x7FFF$_$FFFF para números positivos de 0x8000$_$0000 para números negativos.Esta instrução suporta supressão de falha de memória.
+        \\
+    \begin{table}[H]
+        \centering
+        \caption{Instruções de Codificação de operando}
+            \begin{tabular}{|l|l|c|c|r|r|}
+                \hline
+                \emph{Op/En} & Tupla & Operando 1 & Operando 2 & Operando 3 & Operando 4\\
+                \hline
+                    A
+                    & Full
+                    & ModRM:reg (r,w)
+                    & EVEX.vvvv (r)
+                    & ModRM:r/m (r)
+                    & NA\\
+                \hline
+            \end{tabular}
+        \label{tab:dimensoes}
+    \end{table}
+
+    \textbf{VPDPWSSD: multiplicação e adição com palavras inteiras assinadas}
+    Multiplica as palavras assinadas individuais do primeiro operando de origem pelas palavras assinadas correspondentes do segundo operando de origem, produzindo resultado intermediários e com duas palavras. Os resultados de palavras duplas adjacentes são então somados e acumulados no operando de destino. Esta instrução suporta supressão de falha de memória.
+    \begin{table}[H]
+        \centering
+        \caption{VPDPWSSD: Opcodes, instruções e descrição das instruções}
+            \begin{tabular}{|l|c|}
+                \hline
+                    \emph{Opcode/Instrução} & Descrição\\
+                \hline
+        	        EVEX.128.66.0F38.W0 52 /r 
+        	        & Multiplique grupos de 2 pares de palavras assinadas\\
+        	        
+        	        VPDPWSSD xmm1\{k1\}\{z\}, xmm2, 
+        	        & xmm3/m128/m32bcst com as palavras assinadas\\
+        	        
+        	        xmm3/m128/m32bcst & correspondentes de xmm2, somando os produtos\\ 
+        	        &  e adicionando-os ao resultado da palavra dupla\\
+        	        
+        	        &  em xmm1 na writemask  k1.\\
+                \hline
+        	        EVEX.256.66.0F38.W0 52 /r 
+        	        & Multiplique grupos de 2 pares de palavras assinadas\\
+        	        
+        	        VPDPWSSD ymm1\{k1\}\{z\}, ymm2, 
+        	        & ymm3/m256/m32bcst com as palavras assinadas\\
+        	        
+        	        ymm3/m256/m32bcst & correspondentes de ymm2, somando os produtos\\ 
+        	        &  e adicionando-os ao resultado da palavra dupla\\
+        	        
+        	        &  em ymm1 na writemask  k1.\\
+        	    
+                \hline
+        	        EVEX.512.66.0F38.W0 52 /r 
+        	        & Multiplique grupos de 2 pares de palavras assinadas\\
+        	        
+        	        VPDPWSSD zmm1\{k1\}\{z\}, zmm2, 
+        	        & zmm3/m512/m32bcst com as palavras assinadas\\
+        	        
+        	        zmm3/m512/m32bcst & correspondentes de zmm2, somando os produtos\\ 
+        	        &  e adicionando-os ao resultado da palavra dupla\\
+        	        
+        	        &  em zmm1 na writemask k1.\\
+                \hline		    
+            \end{tabular}
+        \label{tab:dimensoes}
+    \end{table}
+    \begin{table}[H]
+        \centering
+        \caption{Instruções de Codificação de operando}
+            \begin{tabular}{|l|l|c|c|r|r|}
+                \hline
+                    \emph{Op/En} & Tupla & Operando 1 & Operando 2 & Operando 3 & Operando 4\\
+                \hline
+                    A
+                    & FULL
+                    & ModRM:reg (r, w)
+                    & EVEX.vvvv (r)
+                    & ModRM:r/m (r)
+                    & NA\\
+                \hline		    
+            \end{tabular}
+        \label{tab:dimensoes}
+    \end{table}
+
+    \textbf{VPDPWSSDS: multiplicação e adição com palavras assinadas e saturadas}
+    Multiplica as palavras assinadas individuais do primeiro operando de origem pelas palavras assinadas correspondentes do segundo operando de origem, produzindo resultados intermediários com duas palavras. Os resultados de palavras duplas adjacentes são então somados e acumulados no operando de destino. Se a soma intermediária ultrapassar um número assinado 32b, o resultado é saturado para 0x7FFF\_FFFF para números positivos de 0x8000\_0000 para números negativos. Esta instrução suporta supressão de falha de memória. Os opcodes, as instruções e a descrição são equivalentes às tabelas VPDPWSSD, apenas considera a saturação asssinada.
+
+    \textbf{VPEXPAND: Expandir valores de bytes ou palavras}
+    Expande valores inteiros de até 64 bytes ou valores inteiros de 32 palavras do operando de origem (memory operand) ao operando de destino (register operand), com base nos elementos ativos determinados pelo operando da writemask. Note: EVEX.vvvv é reservado e deve ser 1111b, caso contrário, as instruções serão \#UD. Move 128, 256 ou 512 bits de valores inteiros de bytes compactados do operando de origem (memory operand) para o operando de destino  (register operand). Esta instrução é usada para carregar de um registro de vetor int8 ou local de memória enquanto insere os dados em elementos esparsos do registro do vetor de destino usando os elementos ativos apontados pelo operando writemask. Esta instrução suporta supressão de falha de memória. Observe que o deslocamento compactado assume a pré-escala de (N) correspondente ao tamanho de um único elemento, em vez do tamanho do vetor completo.
+
+    \begin{table}[H]
+	    \centering
+        \caption{VPEXPAND: Opcodes, instruções, Op/EN e descrição}
+            \begin{tabular}{|l|c|l|}
+                \hline
+	            \emph{Opcode/Instrução} & Op/En & Descrição
+    	        \\ \hline %1
+    		        EVEX.128.66.0F38.W0 62 /r
+    		        & A
+    		        & Expande até 128 bits de valores de bytes
+    		        
+    		        & VPEXPANDB xmm1\{k1\}\{z\}, m128
+    		        & 
+    		        &  compactados de m128 para xmm1 com
+    		        
+    		        & 
+    		        & 
+    		        &  a whitemark k1.
+    		        
+    	        \\ \hline %2
+    		        EVEX.128.66.0F38.W0 62 /r
+    		        & B
+    		        & Expande até 128 bits de valores de bytes
+    		        
+    		        & VPEXPANDB xmm1\{k1\}\{z\}, xmm2
+    		        & 
+    		        &  compactados de xmm2 para xmm1 com
+    		        
+    		        & 
+    		        & 
+    		        &  a whitemark k1.
+    		        
+    	        \\ \hline %3
+    		        EVEX.256.66.0F38.W0 62 /r
+    		        & A
+    		        & Expande até 256 bits de valores de bytes
+    		        
+    		        & VPEXPANDB ymm1\{k1\}\{z\}, m256
+    		        & 
+    		        &  compactados de m256 para ymm1 com
+    		        
+    		        & 
+    		        & 
+    		        &  a whitemark k1.
+    		        
+    	        \\ \hline %4
+    		        EVEX.256.66.0F38.W0 62 /r
+    		        & B
+    		        & Expande até 256 bits de valores de bytes
+    		        
+    		        & VPEXPANDB ymm1\{k1\}\{z\}, ymm2
+    		        & 
+    		        &  compactados de ymm2 para ymm1 com
+    		        
+    		        & 
+    		        & 
+    		        &  a whitemark k1.
+    		        
+    	        \\ \hline %5
+    		        EVEX.512.66.0F38.W0 62 /r
+    		        & A
+    		        & Expande até 512 bits de valores de bytes
+    		        
+    		        & VPEXPANDB zmm1\{k1\}\{z\}, m512
+    		        & 
+    		        &  compactados de m512 para zmm1 com
+    		        
+    		        & 
+    		        & 
+    		        &  a whitemark k1.
+    		        
+    	        \\ \hline %6
+    		        EVEX.512.66.0F38.W0 62 /r
+    		        & B
+    		        & Expande até 512 bits de valores de bytes
+    		        
+    		        & VPEXPANDB zmm1\{k1\}\{z\}, zmm2
+    		        & 
+    		        &  compactados de zmm2 para zmm1 com
+    		        
+    		        & 
+    		        & 
+    		        &  a whitemark k1.
+    		        
+    	        \\ \hline %7
+    		        EVEX.128.66.0F38.W0 62 /r
+    		        & A
+    		        & Expande até 128 bits de valores de bytes
+    		        
+    		        & VPEXPANDB zmm1\{k1\}\{z\}, m128
+    		        & 
+    		        &  compactados de m128 para xmm1 com
+    		        
+    		        & 
+    		        & 
+    		        &  a whitemark k1.
+    		        
+    	        \\ \hline %8
+    		        EVEX.128.66.0F38.W0 62 /r
+    		        & B
+    		        & Expande até 128 bits de valores de bytes
+    		        
+    		        & VPEXPANDB xmm1\{k1\}\{z\}, xmm2
+    		        & 
+    		        &  compactados de xmm2 para xmm1 com
+    		        
+    		        & 
+    		        & 
+    		        &  a whitemark k1.
+    		        
+    	        \\ \hline %9
+    		        EVEX.256.66.0F38.W0 62 /r
+    		        & A
+    		        & Expande até 256 bits de valores de bytes
+    		        
+    		        & VPEXPANDB ymm1\{k1\}\{z\}, m256
+    		        & 
+    		        &  compactados de m256 para ymm1 com
+    		        
+    		        & 
+    		        & 
+    		        &  a whitemark k1.
+    		        
+    	        \\ \hline %10
+    		        EVEX.256.66.0F38.W0 62 /r
+    		        & B
+    		        & Expande até 256 bits de valores de bytes
+    		        
+    		        & VPEXPANDB xmm1\{k1\}\{z\}, m128
+    		        & 
+    		        &  compactados de ymm2 para ymm1 com
+    		        
+    		        & 
+    		        & 
+    		        &  a whitemark k1.
+    		        
+    	        \\ \hline %11
+    		        EVEX.512.66.0F38.W0 62 /r
+    		        & A
+    		        & Expande até 512 bits de valores de bytes
+    		        
+    		        & VPEXPANDB zmm1\{k1\}\{z\}, m512
+    		        & 
+    		        &  compactados de m512 para zmm1 com
+    		        
+    		        & 
+    		        & 
+    		        &  a whitemark k1.
+        	
+    		    \\ \hline %12
+    		        EVEX.512.66.0F38.W0 62 /r
+    		        & B
+    		        & Expande até 512 bits de valores de bytes
+    		        
+    		        & VPEXPANDB zmm1\{k1\}\{z\}, zmm2
+    		        & 
+    		        &  compactados de zmm2 para zmm1 com
+    		        
+    		        & 
+    		        & 
+    		        &  a whitemark k1.
+    		            		    
+		  \\ \hline    
+       \end{tabular}
+       \label{tab:dimensoes}
+    \end{table}
+    
+    \begin{table}[H]
+        \centering
+        \caption{Instruções de Codificação de operando}
+            \begin{tabular}{|c|c|c|c|c|c|}
+                \hline
+                    \emph{Op/En} & Tupla & Operando 1 & Operando 2 & Operando 3 & Operando 4\\
+                \hline
+        	        A
+        	        & Tuple1 Scalar
+        	        & ModRM:reg (w)
+        	        & ModRM:r/m (r)
+        	        & NA
+        	        & NA
+        	   \\ \hline
+        	        B
+        	        & NA
+        	        & ModRM:reg (w)
+        	        & ModRM:r/m (r)
+        	        & NA
+        	        & NA
+        	   \\ \hline                
+            \end{tabular}
+        \label{tab:dimensoes}
+    \end{table}
+
+    \textbf{VPOPCNT: retorna a contagem do número de bits definida em 1 BYTE/WORD/DWORD/QWORD}
+    Esta instrução conta o número de bits definido como um em cada byte, word, dword ou qword element de sua origem (por exemplo, zmm2 ou memory) e coloca os resultados no registro de destino (zmm1). Esta instrução suporta memória supressão de falhas.
+
+    \begin{table}[H]
+        \centering
+        \caption{Instruções de Codificação de operando}
+            \begin{tabular}{|c|c|c|c|c|c|}
+                \hline
+                    \emph{Op/En} & Tupla & Operando 1 & Operando 2 & Operando 3 & Operando 4\\
+                \hline
+                    A
+                    & Full Mem
+                    & ModRM:reg (w)
+                    & ModRM:r/m (r)
+                    & NA
+                    & NA
+                \\ \hline
+                    B
+                    & Full
+                    & ModRM:reg (w)
+                    & ModRM:r/m (r)
+                    & NA
+                    & NA
+                \\ \hline                
+            \end{tabular}
+        \label{tab:dimensoes}
+    \end{table}
+    
+    \textbf{VPSHLD: Concatenar e alternar dados compactados deixados na lógica}
+    A instrução basicamente concatena dados empacotados e extrai resultado deslocando à esquerda pelo valor da constante.
+    \begin{table}[H]
+        \centering
+        \caption{Instruções de Codificação de operando}
+            \begin{tabular}{|c|c|c|c|c|c|}
+                \hline
+                    \emph{Op/En} & Tupla & Operando 1 & Operando 2 & Operando 3 & Operando 4\\
+                \hline
+        	        A
+        	        & Full Mem
+        	        & ModRM:reg (w)
+        	        & EVEX.vvvv
+        	        & ModRM:r/m (r)
+        	        & imm8 (r)
+        	   \\ \hline
+        	        B
+        	        & Full
+        	        & ModRM:reg (w)
+        	        & EVEX.vvvv
+        	        & ModRM:r/m (r)
+        	        & imm8 (r)
+        	   \\ \hline                
+            \end{tabular}
+        \label{tab:dimensoes}
+    \end{table}
+    
+    \textbf{VPSHLDV: Dados compactados por concatenação e deslocamento à esquerda por uma variável lógica}
+    A instrução concatena dados empacotados e extrai resultado deslocando à esquerda por um valor variável.
+
+    \begin{table}[H]
+        \centering
+        \caption{Instruções de Codificação de operando}
+            \begin{tabular}{|c|c|c|c|c|c|}
+                \hline
+                    \emph{Op/En} & Tupla & Operando 1 & Operando 2 & Operando 3 & Operando 4\\
+                \hline
+                    A
+                    & Full Mem
+                    & ModRM:reg (w)
+                    & EVEX.vvvv
+                    & ModRM:r/m (r)
+                    & imm8 (r)
+               \\ \hline
+                    B
+                    & Full
+                    & ModRM:reg (w)
+                    & EVEX.vvvv
+                    & ModRM:r/m (r)
+                    & imm8 (r)
+               \\ \hline
+            \end{tabular}
+        \label{tab:dimensoes}
+    \end{table}
+
+    \textbf{VPSHRD: Concatenar e alternar dados compactados com lógica}
+    A instrução concatena dados empacotados e extrai resultado deslocando à direita por valor constante.
+
+    \begin{table}[H]
+	    \centering
+        \caption{Instruções de Codificação de operando}
+            \begin{tabular}{|c|c|c|c|c|c|}
+                \hline
+                    \emph{Op/En} & Tupla & Operando 1 & Operando 2 & Operando 3 & Operando 4\\
+                \hline
+        	        A
+        	        & Full Mem
+        	        & ModRM:reg (w)
+        	        & EVEX.vvvv
+        	        & ModRM:r/m (r)
+        	        & imm8 (r)
+        	   \\ \hline
+        	        B
+        	        & Full
+        	        & ModRM:reg (w)
+        	        & EVEX.vvvv
+        	        & ModRM:r/m (r)
+        	        & imm8 (r)
+        	   \\ \hline                
+            \end{tabular}
+        \label{tab:dimensoes}
+    \end{table}
+    
+    \textbf{VPSHRDV: Concatenar e alterar dados compactados por turnos lógicos à direita}
+    A instrução concatena dados empacotados e extrai resultado deslocando à direita por valor constante.
+    \begin{table}[H]
+        \centering
+        \caption{Instruções de Codificação de operando}
+            \begin{tabular}{|c|c|c|c|c|c|}
+                \hline
+                    \emph{Op/En} & Tupla & Operando 1 & Operando 2 & Operando 3 & Operando 4\\
+                \hline
+        	        A
+        	        & Full Mem
+        	        & ModRM:reg (w)
+        	        & EVEX.vvvv
+        	        & ModRM:r/m (r)
+        	        & imm8 (r)
+        	   \\ \hline
+        	        B
+        	        & Full
+        	        & ModRM:reg (w)
+        	        & EVEX.vvvv
+        	        & ModRM:r/m (r)
+        	        & imm8 (r)
+        	   \\ \hline                
+            \end{tabular}
+        \label{tab:dimensoes}
+    \end{table}
+    
+    \textbf{VPSHUFBITQMB:}
+    \\Shuffle Bits de elementos Quadword usando índices de bytes na máscara. Troca o bits de um elemento Quadword usando os índices dentro da máscara.
+    A instrução faz uma coleta dos bits usando o segundo controle fonte e o primeiro dados. Cada bit usa 6 bits de controle, para selecionar os dados que serão acessados.O controle de dados para cada saída e guardado em elementos de 8 bit de SRC2, mas somente o 6 últimos bits significativos de cada elemento são usados.
+    \begin{table}[H]
+        \centering
+        \caption{Instruções de Codificação de operando}
+            \begin{tabular}{|c|c|c|c|c|c|}
+                \hline
+                    \emph{Op/En} & Tupla & Operando 1 & Operando 2 & Operando 3 & Operando 4\\
+                \hline
+        	        A
+        	        & full memo
+        	        & ModRM:reg (w)
+        	        & EVEX.vvvv (r)
+        	        & ModRM:r (r)
+        	        & NA (r)
+        	   \\ \hline                
+            \end{tabular}
+        \label{tab:dimensoes}
+    \end{table}
+
+    \textbf{WBNOINVD: gravar de volta e não invalidar cache}
+    \\Esta instrução escreve de volta todas linha de cache modificadas no cache interno do processador para a memória principal mas não apaga este dos caches internos.Depois de executar esta instrução o processador não espera para caches externos completarem as suas escritas de volta antes de proceder com a instrução de execução.Esta instrução é privilegiada pois quando o processador está rodando em modo protegido, o CPL do programa ou o procedimento deve ser 0 para os ciclos do WBNOINVD serem completos dado o tamanho e as hieraquia impostas no cache.
+    \begin{table}[H]
+        \centering
+        \caption{Instruções de Codificação de operando}
+            \begin{tabular}{|c|c|c|c|c|c|}
+            \hline
+            \emph{Op/En} & Tupla & Operando 1 & Operando 2 & Operando 3 & Operando 4\\
+                \hline
+                    A
+                    & NA
+                    & NA (w)
+                    & NA
+                    & NA (r)
+                    & NA (r)
+                \\ \hline                
+            \end{tabular}
+        \label{tab:dimensoes}
+    \end{table}
 
 \section{Microarquitetura}
-    (Texto sobre microarquitetura - como as instruções do ISA são realmente implementadas no circuito - ???)
+
+    \begin{figure}[H]
+		\centering
+		\caption{Diagrama da microarquitetura.}
+		\includegraphics[width=\textwidth]{skylake_block_diagram}
+	\end{figure}
+
+    A microarquitetura Intel Core apresenta os seguintes recursos que permitem alto desempenho e desempenho de baixo consumo de energia para cargas de trabalho de thread único e multi-thread:
+    \textbf{Intel® Wide Dynamic Execution}
+    permite que cada núcleo do processador busque, despache, execute em altas larguras de banda para suportar o descanso de até quatro instruções por ciclo.
+    \begin{itemize}
+        \item Pipeline eficiente de quatorze estágios
+        \item Três unidades lógicas aritméticas
+        \item Quatro decodificadores para decodificar até cinco instruções por ciclo
+        \item Fusão macro e micro fusão para melhorar o rendimento do front end
+        \item Taxa de emissão máxima de envio de até seis micro-operações por ciclo
+        \item Largura de banda máxima de aposentadoria de até 4 micro-operações por ciclo
+        \item Previsão de ramificação avançada
+        \item Rastreador de ponteiro de pilha para melhorar a eficiência da execução de entradas e saídas de funções/procedimentos
+    \end{itemize}
+
+    \textbf{Intel Microarchitecture Code Name Nehalem}
+    A microarquitetura Intel Nehalem fornece a base para muitos recursos inovadores do Intel Core i7. Ela se baseia no sucesso da microarquitetura Intel Core de 45nm e fornece o seguinte recurso aprimoramentos:
+    \begin{itemize}
+        \item \textbf{Núcleo do processador aprimorado}
+        melhor previsão de ramificação e recuperação de erros de previsão. Streaming de loop aprimorado para melhorar o desempenho do front end e reduzir o consumo de energia.Buffer mais profundo em mecanismo fora de ordem para extrair paralelismo.Unidades de execução aprimoradas para fornecer aceleração no CRC, processamento de string / texto e embaralhamento de dados.
+        \item \textbf{Acesso Inteligente à Memória}
+        controlador de memória integrado fornece acesso de baixa latência à memória do sistema e à memória escalável
+        largura de banda. Nova organização da hierarquia de cache com L3 compartilhado e inclusivo para reduzir o tráfego de bisbilhoteiros. Nova organização da hierarquia de cache com L3 compartilhado e inclusivo para reduzir o tráfego de bisbilhoteiros. TLBs de dois níveis e tamanho aumentado de TLB. Acesso rápido e desalinhado à memória.
+        \item \textbf{Tecnologia HyperThreading}
+        fornece dois threads de hardware (processadores lógicos) por núcleo. Aproveita o mecanismo de execução de 4 larguras, L3 grande e grande largura de banda de memória. 
+        \item \textbf{Inovações dedicadas ao gerenciamento de energia}
+        microcontrolador integrado com firmware incorporado otimizado para gerenciar o consumo de energia. Sensores incorporados em tempo real para temperatura, corrente e energia. Portão de energia integrado para desligar / ligar o consumo de energia por núcleo. Versatilidade para reduzir o consumo de energia da memória, vincular subsistemas.
+    \end{itemize}
+
+    \textbf{Intel Microarchitecture Code Name Sandy Bridge}
+    o nome de código da microarquitetura Intel Sandy Bridge se baseia nos sucessos da microarquitetura Intel Core e nome de código da microarquitetura Intel Nehalem. Oferece os seguintes recursos inovadores:
+        \begin{itemize}
+        \item \textbf{Extensões vetoriais avançadas Intel (Intel AVX)}
+        Extensões de conjunto de instruções de ponto flutuante de 256 bits para as extensões Intel Streaming SIMD de 128 bits, fornecendo benefícios de desempenho de até 2X em relação ao código de 128 bits. A codificação de destino não destrutivo oferece técnicas de codificação mais flexíveis. Suporta migração flexível e coexistência entre código AVX de 256 bits, código AVX de 128 bits e código legado 128-código SSE de bit.
+        \item \textbf{Mecanismo aprimorado de front-end e execução}
+        novo componente Icache decodificado que melhora a largura de banda do front-end e reduz a previsão incorreta de ramificação multa. Previsão de ramificação avançada. Suporte adicional a macro-fusão. Janela de execução dinâmica maior. Aprimoramentos aritméticos inteiros de precisão múltipla (ADC / SBB, MUL / IMUL). Melhoria da largura de banda do LEA. Redução de paralisações gerais de execução (portas de leitura, conflitos de write-back, latência de desvio, paralisações parciais). Manipulação rápida de exceções de ponto flutuante. Melhorias de desempenho do XSAVE / XRSTORE e novas instruções do XSAVEOPT.
+        \item \textbf{Melhorias na hierarquia de cache para caminho de dados mais amplo}
+        dobragem de largura de banda ativada por duas portas simétricas para operação de memória. Manuseio simultâneo de mais cargas e estoques em voo, possibilitados pelo aumento de buffers. Largura de banda interna de duas cargas e uma loja a cada ciclo. Pré-busca aprimorada. Arquitetura LLC de baixa latência e alta largura de banda. Arquitetura de anel de alta largura de banda de interconexão na matriz.
+    \end{itemize}  
+
+    \textbf{Intel Advanced Smart Cache}
+    oferece maior largura de banda do cache de segundo nível para o núcleo e para o desempenho e flexibilidade ideais para aplicativos de thread único e multi-thread:
+    \begin{itemize}
+        \item Cache grande de segundo nível de  até 4 MB e associatividade de 16 vias
+        \item Otimização para ambientes de execução multicore e single-thread.
+        \item Caminho de dados interno de 256 bits para melhorar a largura de banda L2 para o cache de dados de primeiro nível
+    \end{itemize}
+    
+    \textbf{Arquitetura Intel 64}
+    A arquitetura Intel 64 aumenta o espaço de endereço linear do software para 64 bits e suporta o espaço de endereço físico em até 52 bits. A tecnologia também apresenta um novo modo de operação conhecido como modo IA-32e. O modo IA-32e opera em um de dois submodos: (1) o modo de compatibilidade permite que um sistema operacional de 64 bits execute a maioria dos softwares herdados de 32 bits sem modificação, (2) o modo de 64 bits permite que um sistema operacional de 64 bits execute aplicativos gravados para acessar o espaço de endereço de 64 bits. No modo
+    de 64 bits, os aplicativos podem acessar:
+    \begin{itemize}
+        \item endereçamento linear plano de 64 bits
+        \item 8 registros gerais de uso geral (GPRs)
+        \item GPRs de 64 bits e indicadores de instruções
+        \item endereçamento uniforme do registro de bytes
+        \item mecanismo rápido de priorização de interrupção
+        \item um novo modo de endereçamento relativo de ponteiro de instrução
+    \end{itemize}
+    Um processador de arquitetura Intel 64 suporta o software IA-32 existente porque é capaz de executar todos os modos legados que não são de 64 bits suportados pela arquitetura IA-32. A maioria dos aplicativos IA-32 existentes também é executada no modo de compatibilidade. 
+    
+    \textbf{Tecnologia de virtualização Intel (Intel VT)}
+    A tecnologia de virtualização Intel para arquiteturas Intel 64 fornece extensões que oferecem suporte à virtualização. As extensões são conhecidas como VMX (Virtual Machine Extensions). Uma plataforma Intel 64 com VMX pode funcionar como vários sistemas virtuais (ou máquinas virtuais). Cada máquina virtual pode executar sistemas operacionais e aplicativos em partições separadas. O VMX também fornece interface de programação para uma nova camada de software do sistema (denominada Virtual Machine Monitor (VMM)) usada para gerenciar a operação de máquinas virtuais. O processador Intel Core i7 fornece os seguintes aprimoramentos à tecnologia de virtualização Intel:
+    \begin{itemize}
+        \item ID do processador virtual (VPID) para reduzir o custo do gerenciamento de transições do VMM.
+        \item EPT (Extended Page Table) para reduzir o número de transições para o VMM gerenciar a virtualização de memória.
+        \item Latência reduzida de transições de VM.
+    \end{itemize}
+
+    
+    \textbf{Intel Advanced Digital Media Boost}
+    melhora a maioria das instruções SIMD de 128 bits com taxa de transferência de ciclo único e operações de ponto flutuante:
+    \begin{itemize}
+        \item Taxa de transferência de ciclo único da maioria das instruções SIMD de 128 bits
+        \item Até oito operações de ponto flutuante por ciclo
+        \item Três portas de emissão disponíveis para o envio de instruções SIMD para execução
+    \end{itemize}
+
+    \textbf{Ambiente de execução básica}
+    Trata-se do ambiente básico de execução de um processador Intel 64 conforme visto pelos programadores em linguagem assembly. Ele descreve como o processador executa instruções e como armazena e manipula dados. O ambiente de execução descrito aqui inclui memória (o espaço de endereço), registradores de dados de uso geral, registradores de segmento, registrador de sinalizador e registrador de ponteiro de instrução.
+    A arquitetura Intel 64 adiciona o modo IA-32e. O modo IA-32e possui dois submodos. Esses são:
+    \begin{itemize}
+        \item \textbf{Modo de compatibilidade (submodo do modo IA-32e):} O modo de compatibilidade permite que a maioria dos aplicativos herdados de 16 e 32 bits seja executada sem recompilação em um sistema operacional de 64 bits. Por questões de abreviação, o submodo de compatibilidade é referido como modo de compatibilidade na arquitetura IA-32. O modo de compatibilidade também suporta todos os níveis de privilégio suportados nos modos de 64 bits e protegido. Os aplicativos herdados que são executados no modo Virtual 8086 ou usam o gerenciamento de tarefas de hardware não funcionarão nesse modo. O modo de compatibilidade é ativado pelo sistema operacional (SO) com base no segmento de código. Isso significa que um único sistema operacional de 64 bits pode suportar aplicativos de 64 bits em execução no modo de 64 bits e aplicativos herdados de 32 bits em execução no modo de compatibilidade (não recompilados para 64 bits). O modo de compatibilidade é semelhante ao modo protegido de 32 bits. Os aplicativos acessam apenas os primeiros 4 GByte de espaço de endereço linear. O modo de compatibilidade usa tamanhos de endereço e operando de 16 e 32 bits. Como o modo protegido, esse modo permite que os aplicativos acessem memória física superior a 4 GByte usando PAE (extensões de endereço físico).
+        \item \textbf{Modo de 64 bits (submodo do modo IA-32e):} Este modo permite que um sistema operacional de 64 bits execute aplicativos gravados para acessar o espaço de endereço linear de 64 bits.
+    \end{itemize}
+
+    \begin{figure}[H]
+		\centering
+		\caption{Ambiente de execução no modo de 64 bits.}
+		\includegraphics[width=\textwidth]{diagram64}
+	\end{figure}
+
+\section{Detalhes da microarquitetura}
+    \textbf{Registradores}
+    Na arquitetura de 64 bits que compõe o processador i7 7700 tem a capacidade de aumentar linearmente por software até 64  bits e suporta endereços físicos de espaço de ate 52 bits.De um modo geral temos que no modo de 64-bit, as aplicações podem acessar os seguintes registradores:
+    \begin{itemize}
+		\item Um endereço linear e flat de 64-bit.
+        \item 8 registradores adicionais de uso diverso (GPRs).
+        \item 8 registradores para transferência SIMD com extensões (SSE, SSE2, SSE3 and SSSE3).
+        \item GPRs de 64-bit e ponteiros de instrução .
+        \item Endereço uniforme de composto por um registrador de um byte.
+        \item Mecanismo de interrupção rápida.
+        \item Um outro ponteiro de instrução relativo ao modo de endereçamento.
+    \end{itemize}
+    O ambiente de execução é composto dos seguintes grupos de registradores os quais iremos detalhar mais na sequência.
+    
+    \textbf{Endereços de espaço}: Este registradores endereçam tarefas de até $2^{64}$ bytes.
+    
+    \textbf{Registradores de execução básica para programa}: O Número de registradores de uso geral (GPRs) é de 16 e estes tem o tamanho de 64 bits, suportam operandos de diversos formatos de dados.
+    
+    \textbf{Registradores XMM}: A arquitetura possui 16 registradores de dados XMM para operações SIMD.
+    
+    \textbf{Registradores YMM}: Tem 16 registradores de dados YMM para operações SIMD.
+    
+    \textbf{Registradores BND, BNDCFGU, BNDSTATUS}.
+    
+    \textbf{Pilha}: O ponteiro de pilha tem o tamanho de 64 bits.
+    
+    \textbf{Registradores de controle}: Estes registradores de controle podem expandir até 64 bits.
+    
+    \textbf{Registradores de Debug}: Estes registradores de debug podem expandir até 64 bits.
+    
+    Nesta seção detalharemos os grupos de registradores especificando seu nomes e seus usos.
+    
+    \textbf{Registradores de execução básica para programa}:
+    \begin{itemize}
+        \item \textbf{Registradores de uso geral}: Estes oito registradores estão separados para guardar operandos e ponteiros 
+        
+        \item \textbf{Registradores de segmento}: Estes registradores guardam até seis seleções de segmentos
+        
+        \item \textbf{EFLAGS( status do programa e controle )}: As EFLAGS reportam o status dos programas que estão
+        sendo executados deixando o acesso limitado ao controle do processador em nivel de programa 
+        
+        \item \textbf{EIP ( Ponteiro de instrução ) registrador}: Os registradores EIP contém um ponteiro de 32-bit para próxima instrução a ser executada
+        
+    \end{itemize}
+    \\ \textbf{Registradores de uso geral}
+    Temos como registradores de uso geral  EAX, EBX, ECX, EDX, ESI, EDI, EBP, e ESP que ajudam as seguites operações:
+    \begin{itemize}
+        \item Operandos para operações lógicas e aritméticas
+        \item Operandos para endereçar cálculos
+        \item Ponteiros de memória
+    \end{itemize}
+	Quando referenciados tais registradores devem referenciar o ESP, este que por sua vez endereçar o ponteiro da fila ( Stack pointer).
+	O detalhamento geral dos registradores que compoem este conjunto pode ser dado por:
+    \begin{itemize}
+    	\item \textbf{EAX} - Acumulador que guarda dados de operandos. 
+    	\item \textbf{EBX} - Ponteiro para dado no seguimento DS.
+    	\item \textbf{EDX} - Ponteiro para entrada e saída.
+    	\item \textbf{ESI} - Ponteiro para dados no seguimento apontado para o registrador DS; fonte para operações. com string
+    	\item \textbf{EDI} - Ponteiro de dados para o registrador ES, destino para operações com string.
+    	\item \textbf{ESP} - Ponteiro de fila (stack pointer).
+    	\item \textbf{EBP} - Ponteiro para dados na fila .
+    \end{itemize}
+    
+    \textbf{Registradores de segmento}
+    os registradores de segmento (CS, DS, SS, ES, FS e GS) guarda seletores de guimentos no tamanho de 16-bit.
+    Cada um dos segmentos está associado com três tipos de armazenamento: Código, Dados, ou Fila .Por exemplo o registrador \textbf{CS} guarda o seletor de segmento para o código.
+    Os registradores \textbf{DS, ES, FS,} e \textbf{GS} apontam para quatro segmentos de dados a disponibilidade de quatro registradores para dados garante a eficiência para diferentes tipos de estruturas de dados.
+    O \textbf{SS} contém um segmento seletor para o segmento da pilha onde os procedimentos são armazenados para o programa.
+
+    \textbf{RFLAGS} 
+    
+    \begin{itemize}
+        \item \textbf{Flag de status} :  estas flags armazenam os resultados das operações aritméticas feitas po ADD, SUB, MUL e DIV. As flags de status são:
+        
+        \begin{itemize}
+            \item \textbf{CF (Carry Flag)} - Setada quando uma operação gera um carry ou empresta do bit mais significante. Limpo caso contrário.
+
+            \item \textbf{PF (Parity Flag)} - Setada se o último byte mais significativo do resultado contém um número par de bits 1.
+            
+            \item \textbf{AF (Auxiliary Flag)} - Seta se uma operação aritmética gera um carry ou um emprestado fora do bit 3. Limpo caso contrário.
+            		
+    		\item \textbf{ZF (Zero Flag)} - Setada se o resultado é zero. Limpo caso contrário.
+    
+    		\item \textbf{SF (Sign Flag)} - Seta igual para o bit mais significante do resultado, que é da 		assinatura no inteiro. (0 indica um valor positivo e 1 indica um valor negativo).
+        \end{itemize}
+        
+        \item \textbf{DF Flag} : A flag de direção controla a instruções de string ( MOVS, CMPS, SCAS, LODS e STOS). Configurando a flag DF causa a instrução para se auto decrementar. E a limpando faz com que a instrução se auto incremente.
+
+
+        \item \textbf{Flags do Sistema e campos IOPL} : Estas duas flags são reservadas para controlar ou executar operações do SO. As funções das flags de sistemas são as seguintes:
+        
+        
+        \begin{itemize}
+            \item \textbf{TF (Trap Flag)} - Seta para ativar o modo single-step para debugging.
+
+            \item \textbf{IF (Interrupt Flag)} - Controla a resposta do processador para guardar as requisições.
+            
+            \item \textbf{IOPL (Campo privilegiado para dispositivos de entrada e saída)} - Indica um privilégio para dispositivos de entrada e saída.
+            
+            \item \textbf{NT (Nested Task flag)} - Controla o encadeamento de interrupções e chamadas as tarefas.
+            
+            \item \textbf{RF (Resume Flag)} - Controla a resposta do processador a exceções de debug.
+            
+            \item \textbf{VM (Virtual-8086 mode flag)} - Habilita e desabilita tal modo. 
+            
+            \item \textbf{AC (Alignment check flag)} - Se o bit AM e setado no registrador CR0 o checador de alinhamento é apenas válido para acesso se a flag está setada em 1.
+            
+            \item \textbf{VIF (Virtual Interrupt flag)}- Imagem virtual da flag IF. Usada em conjunto com a flag VIP( As extensões virtuais são ativadas setando a flag VME no controle do registrador CR4).
+            
+            \item \textbf{VIP (Virtual Interrupt pending flag)} - Seta para indicar que uma interrupção esta pendente.
+    
+            \item \textbf{ID (Identification flag)} - Esta flag da suporte as instruções CPUID.
+
+        \end{itemize}
+        
+        \item \textbf{Instruction Pointer (Ponteiro de instrução)}
+        O ponteiro de instrução contém o atual segmento de código para a próxima instrução tais como (JMP, Jcc, CALL, e RET) interrupções e exceções. 
+
+    \end{itemize}
+    
+    \textbf{Memória}
+    O processador o qual estamos trabalhando (i7 7700), tem até dois canais de memória podendo suportar até 64 gigas de espaço de RAM, podendo suportar os seguites tipos de memória DDR4-2133/2400, DDR3L-1333/1600 de @ 1.35V.
+    
+    \textbf{Núcleos}
+    Essa arquitetura conta com 4 núcleos físicos, e mais 4 núcleos de hyper threading deixando essa arquitetura equivalente a 8 núcleos.
+    
+    \textbf{Threads}
+    Temos que a arquitetura de conta com distintas configurações para threads, sendo que para determinados modelos da arquitetura como o i7x64 contamos com até 8 threads com o recurso de Hyper-Threading, o qual permite isso, também há versões da arquitetura que contam com 4 threads.
+    O sistema de Hyper-Threading é uma tecnologia que faz com que a arquitetura física de um processador seja representada por duas arquiteturas lógicas de mais processadores, deixando com que o Sistema operacional possa usufruir de recursos, garantindo o mesmo consumo de uma só arquitetura.
 
 \section{Desempenho}
-    (Texto sobre desempenho - mesmo benchmarks da outra arquitetura - Giovanni)
-
-\section{Sobre a arquitetura para comparação}
-    (Texto sobre a arquitetura para comparação - ???) 
-
-\section{Comparação entre arquiteturas}
-    (Texto sobre a comparação com outra arquitetura atual (mesmo benchmark) - estruturas ou funções exigem mais (ou menos) operações em cada arquitetura - vantagens de cada uma - Alexia)
-
-\section{Conclusão}
-    (Texto sobre conclusão - ???)
-
-\section{Considerações Finais}
-    (Texto sobre considerações finais - ???)
-
-\section*{Agradecimentos}
-    (Texto sobre agradecimentos pertinentes - gradecer ao outro grupo pela comparação, agradecer ao professor Norton, agradecer a EACH, agredecer a diretoria - ???)
-
-\section*{Demais Autores}
-    (Lista dos nomes, filiação e e-mail dos demais autores do documento, na forma de uma tabela.)
     
-% Início da bibliografia
+    \begin{figure}[H]
+		\centering
+		\caption{Testes de benchmark}
+		\includegraphics[width=\textwidth]{unknown}
+	\end{figure}
+    
+\section{Comparação com a arquitetura Zen no processador Ryzen 7 1700}
+    
+    \begin{figure}[H]
+		\centering
+		\caption{Comparação entre as duas arquiteturas}
+		\includegraphics[width=\textwidth]{images/compare.png}
+	\end{figure}
+	
+    \newpage 
+    Iremos comparar duas configurações arquiteturas com de duas formas distintas sendo uma de core único e uma de outra comparação analisando múltiplos cores. De forma geral, podemos analisar a seguite analise geral que o processador Ryzem tem melhor desempenho, obtendo uma pontuação mais alta no benchmarch que usamos.
+	\begin{figure}[H]
+		\centering
+		\caption{Pontução geral - Site PassMark Software}
+		\includegraphics[width=\textwidth]{a}
+	\end{figure}
+	\begin{figure}[H]
+		\centering
+		\caption{Pontução para core unico - Site PassMark Software}
+		\includegraphics[width=\textwidth]{b}
+	\end{figure}
+	
+\section{Conclusão}
+    Dado toda a análise que fizemos sobre o processador e arquitetura, concluímos que há diversas características únicas. Como também características que são comparáveis a arquiteturas mais antigas como as forma a qual os registradores trabalham em conjunto com os operandos e como os conceitos principais das arquitetura se permaneceram ao decorrer do tempo. Nota-se também que as melhorias feitas ao decorrer do tempo são sucintas, mas a ao longo do tempo fazem uma imensa diferença como a tecnologia de Hyper-Threading e o suporte a vídeos 4K que é uma das funcionalidade da arquitetura analisada. Percebe-se que os conjuntos de instrução da arquitetura que estão implementados se abstraem em muitas tarefas deixando a vida do programador que precisa fazer alguma aplicação em nível de sistemas mais simples. Vimos também que em comparação com outras arquiteturas são aplicáveis a distintos usos, pois quando comparamos a arquitetura analisada com outras esta mostrou-se com um desempenho inferior em multitasking. De forma geral, a arquitetura que analisamos é empregada em diversos contextos, desde jogos até simulações e podem ser adaptável para outros contextos. 
+
 \bibliographystyle{ppgsi}
 \bibliography{arquivo_da_bibliografia}
-
-% Apêndices
-\appendix
-
-\appsection{Apêndice 1}
-    Texto do apêndice 1
-
-\appsection{Apêndice 2}
-    Texto do apêndice 2
-
 \end{document}
